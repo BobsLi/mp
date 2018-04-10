@@ -1,0 +1,37 @@
+{
+  "pages":[
+    "pages/pl-detail/detail",
+    "pages/pl/index",
+    "pages/index/index",
+    "pages/logs/logs",
+    "pages/user/index",
+    "pages/search/index"
+  ],
+  "window":{
+    "backgroundTextStyle":"light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "WeChat",
+    "navigationBarTextStyle":"black",
+    "enablePullDownRefresh": true
+  },
+  "tabBar": {
+    "selectedColor": "#09e",
+    "list": [{
+      "pagePath": "pages/pl/index",
+      "text": "技术服务",
+      "iconPath": "image/icon/tech.jpg",
+      "selectedIconPath": "image/icon/tech-hl.jpg"
+    },{
+      "pagePath": "pages/search/index",
+      "text": "分类浏览",
+      "iconPath": "image/icon/type.jpg",
+      "selectedIconPath": "image/icon/type-hl.jpg"
+    },
+    {
+      "pagePath": "pages/user/index",
+      "text": "个人中心",
+      "iconPath": "image/icon/userinfo.jpg",
+      "selectedIconPath": "image/icon/userinfo-hl.jpg"
+    }]
+  }
+}

@@ -1,0 +1,93 @@
+<view class="product-list-box">
+  <block wx:if="{{carousel.items}}">
+    <view class='carousel-box'>
+      <swiper id="swiper1" class='' indicator-dots="{{carousel.options.indicatorDots}}" autoplay="{{carousel.options.autoplay}}" interval="{{carousel.options.interval}}" duration="{{carousel.options.duration}}">
+        <block wx:for-items="{{carousel.items}}" wx:key="{{item.id}}">
+          <swiper-item item-id="{{item.id}}">
+            <image class="swiper-img" src='{{item.img}}' mode='scaleToFill' width="100%" />
+          </swiper-item>
+        </block>
+      </swiper>
+      <view class="search-box">
+        <view class="weui-search-bar {{isFixed ? 'search-fixed' : ''}}">
+          <view class="weui-search-bar__form">
+            <view class="weui-search-bar__box">
+              <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
+              <input type="text" class="weui-search-bar__input" placeholder="搜索" value="{{keywords}}" focus="{{inputShowed}}" bindinput="inputTyping" />
+              <view class="weui-icon-clear" wx:if="{{keywords.length > 0}}" bindtap="clearInput">
+                <icon type="clear" size="14"></icon>
+              </view>
+            </view>
+            <label class="weui-search-bar__label" hidden="{{inputShowed}}" bindtap="showInput">
+              <icon class="weui-icon-search" type="search" size="14"></icon>
+              <view class="weui-search-bar__text">搜索</view>
+            </label>
+          </view>
+          <view class="weui-search-bar__cancel-btn" hidden="{{!inputShowed}}" bindtap="hideInput">取消</view>
+        </view>
+        <block wx:if="{{keywords_list}}">
+          <view class="keywords-search-box">
+              <block wx:for-items="{{keywords_list}}" wx:key="{{index}}">
+                <text class="search-keyword-item" data-key="{{item}}" bindtap="getKeywords">{{item}}</text>
+              </block>
+          </view>
+        </block>
+      </view>
+    </view>
+  </block>
+  <view class="tech-type-box">
+    <scroll-view class="type-scroll" scroll-x="true">
+      <block wx:for-items="{{type.items}}" wx:key="{{item.id}}">
+        <view class="type-item" id="{{item.id}}" bindtap="selectType">
+          <view wx:if="{{item.id == type.activeId}}" class="type-bg-img" style="background-color: #09e;background-image: url('{{item.hoverImg}}');"></view>
+          <view wx:else class="type-bg-img" style="background-image: url('{{item.img}}');"></view>
+          <view class="type-name">{{item.name}}</view>
+        </view>
+      </block>
+    </scroll-view>
+  </view>
+  <block wx:for-items="{{product}}" wx:key="{{item.id}}">
+    <view class="page__bd product-info-box">
+      <view class='weui-panel weui-panel_access'>
+        <!-- <view class="weui-panel__hd">图文组合列表</view> -->
+        <view class="weui-panel__bd">
+          <navigator class='weui-media-box weui-media-box_appmsg' hover-class='weui-cell_active' url='/pages/pl-detail/detail?id={{item.id}}'>
+            <view class='"weui-media-box__hd weui-media-box__hd_in-appmsg product-img-box'>
+              <!-- <image class="product-img" src="{{host + 'image/' + item.technologyImgOne.img_file}}"></image> -->
+              <image class="product-img" src="{{item.img}}"></image>
+            </view>
+            <view class="weui-media-box__bd weui-media-box__bd_in-appmsg product-info">
+              <view class="product-name">{{item.name}}</view>
+              <view class="product-tag">{{item.tag}}</view>
+              <navigator class="supplier-nav" hover-stop-propagation="true" url='pages/suppler-info/index?id={{item.supplier_id}}'>
+                <view class="supplier-name">{{item.supplier_name}}</view>
+              </navigator>
+              <view class='product-price'>￥{{item.price}}</view>
+            </view>
+          </navigator>
+        </view>
+        <view class='weui-panel__ft supplier-info-box'>
+          <navigator class="weui-cell weui-cell_access weui-cell_link" url='/pages/pl-detail/detail?id={{item.id}}'>
+            <view class="icon-box address-box">
+              <view class="base-icon addr-icon" style="background-image: url('image/icon/location.png');"></view>
+              <view class="icon-text">{{item.address}}</view>
+            </view>
+            <view class="icon-box trade-box">
+              <view class="base-icon trade-icon" style="background-image: url('image/icon/comment.png');"></view>
+              <view class="icon-text">{{item.trade_num}}</view>
+            </view>
+            <block wx:if="{{item.vouch}}">
+              <view class="icon-box vouch-box">
+                <view class="base-icon vouch-icon" style="background-image: url('image/icon/vouch.png');"></view>
+                <view class="icon-text">平台已担保</view>
+              </view>
+            </block>
+            <view class="weui-cell__ft weui-cell__ft_in-access access-arrow"></view>
+          </navigator>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <view  hidden="{{isLast}}" class="loading-box">...加载中...</view>
+</view>

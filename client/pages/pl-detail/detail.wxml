@@ -1,0 +1,30 @@
+<!--pages/pl/detail.wxml-->
+<view class='detail-box'>
+  <view class='swiper-box'>
+    <swiper class='' indicator-dots="{{productImg.options.indicatorDots}}" autoplay="{{productImg.options.autoplay}}" interval="{{productImg.options.interval}}" duration="{{productImg.options.duration}}">
+      <block wx:for-items="{{productImg.items}}" wx:key="{{item.id}}">
+        <swiper-item item-id="{{item.id}}">
+          <image class="swiper-img" src='{{item.img}}' mode='scaleToFill' width="100%"/>
+        </swiper-item>
+      </block>
+    </swiper>
+  </view>
+  <view class="info-body">
+    <view class="product-name">【Seqmore】人全外显子测序-15G_建库测序&标准分析（Agilent V6</view>
+    <view class="base-info-box">
+      <view class='"weui-media-box__hd weui-media-box__hd_in-appmsg product-img-box'>
+        
+      </view>
+      <view class="base-info-rt">
+        <view class="trade-box">
+          <view class="trade-text">
+            成交量
+          </view>
+          <view class="trade-num">
+            1
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,30 @@
+/**app.wxss**/
+@import "libs/weui/weui.wxss";
+page{
+  height: 100%;
+  align-items: center;
+  box-sizing: border-box;
+  font-size: 28rpx;
+  color: #333;
+}
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  font-size: 28rpx;
+} 
+.icon-box>view{
+  display: inline-block;
+  vertical-align: middle;
+}
+.icon-box .base-icon{
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+  width: 13px;
+  height: 13px;
+  margin-right: 4px;
+}
