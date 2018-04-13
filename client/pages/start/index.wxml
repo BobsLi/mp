@@ -1,0 +1,6 @@
+<!--pages/start/index.wxml-->
+<view class="start-box">
+  <view class="title-box">
+    <image class="title-img" src='../../image/start/title.png'></image>
+  </view>
+</view>

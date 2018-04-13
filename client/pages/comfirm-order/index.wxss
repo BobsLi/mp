@@ -1,0 +1,94 @@
+/* pages/comfirm-order/index.wxss */
+.linker-box{
+  position: relative;
+  align-items: center;
+}
+.linker-box .row-1{
+    font-size: 32rpx;
+}
+.linker-nav{
+  background-color: #fff  ;
+  border-bottom: 4px solid #0099ee;
+  border-top: 1px solid #d4d4d4;
+}
+.linker-box .name{
+  margin-right: 10rpx;
+}
+.order-info-box{
+  margin-top: 20rpx;
+}
+.supplier-name{
+  font-size: 36rpx;
+  color: #333;
+}
+.product-img-box{
+  width: 160rpx;
+  height: 160rpx;
+}
+.product-name{
+  display: -webkit-box;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  white-space: inherit;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp:2;
+  -webkit-box-pack: start;
+  -webkit-box-align: start;
+  font-size: 32rpx;
+}
+.price-num-box .weui-flex{
+  align-items: center;
+}
+.price-num-box .num{
+  text-align: right;
+}
+.increment-box .row-box{
+  border-bottom: 1px solid #e4e4e4;
+}
+.increment-box .row-box:last-of-type{
+  border-bottom-color: transparent;
+}
+.remark-cell{
+  align-items: flex-start;
+}
+.remark-cell textarea{
+  height: 200rpx;
+}
+.price-detail-box .weui-panel{
+  padding: 20rpx 0;
+}
+.price-detail-box .row-box>.weui-cell{
+  padding: 2rpx 30rpx;
+}
+.price-detail-box .money-box{
+  text-align: right;
+}
+.detail-row{
+  padding-bottom: 16rpx;
+}
+.real-money-row .money-num{
+  font-size: 32rpx;
+  font-weight: 700;
+}
+.total-price-box{
+  width: 100%;
+  text-align: right;
+}
+.real-money-row{
+  text-align: right;
+   border-top: 1px solid #d4d4d4; 
+   padding: 16rpx 0;
+}
+.total-price-box > view{
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+.total-price-box{
+  font-size: 32rpx;
+}
+.action-box{
+  margin-top: 40rpx;
+  padding: 0 30rpx;
+}

@@ -1,0 +1,181 @@
+<!--pages/comfirm-order/index.wxml-->
+<view class="confirm-box">
+  <view class="linker-box">
+    <navigator class="linker-nav" url='/pages/'>
+      <view class="weui-cell weui-cell_access">
+        <view class="weui-cell__bd">
+          <view class="linker-row row-1">
+            <text class="name">{{linker.link_man}}</text>
+            <text class="mobile">{{linker.mobile}}</text>
+          </view>
+          <view class="linker-row row-2">
+            <text class="normal-color mobile">{{linker.addr}}</text>
+          </view>
+        </view>
+        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+      </view>
+    </navigator>
+  </view>
+
+  <view class="order-info-box">
+    <form class="" bindsubmit='orderSubmit'>
+
+      <!-- 基本信息 -->
+      <view class="section baseinfo-box">
+        <view class="weui-panel weui-panel_access">
+          <view class="weui-panel__hd supplier-name">{{orderInfo.supplier_name}}</view>
+          <view class="weui-panel__bd">
+            <navigator url="/pages/pl-detail?id={{orderInfo.id}}" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
+              <view class="weui-media-box__hd weui-media-box__hd_in-appmsg product-img-box">
+                <image class="weui-media-box__thumb " src="{{orderInfo.img}}" />
+              </view>
+              <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+                <view class="product-name">{{orderInfo.name}}</view>
+                <view class="weui-media-box__desc">
+                  <text class="">{{orderInfo.spec}}，{{orderInfo.period}}</text>
+                </view>
+                <view class="price-num-box">
+                  <view class="weui-flex">
+                    <view class="weui-flex__item money-box">
+                      <text>￥</text>
+                      <text class="money-num price">{{orderInfo.real_price}}</text>
+                    </view>
+                    <text class='num'>x{{orderInfo.num}}</text>
+                  </view>
+                </view>
+              </view>
+            </navigator>
+          </view>
+        </view>
+      </view>
+
+      <!-- 支付方式 -->
+      <view class="section pay-mode-box">
+        <view class="weui-panel weui-panel_access">
+          <view class="weui-panel__hd title">支付方式</view>
+          <view class="weui-panel__bd">
+            <view class="weui-cell">
+              <view class="weui-cell__hd">
+                <view class="weui-label">选择支付方式</view>
+              </view>
+              <view class="weui-cell__bd">
+                <radio-group bindchange="payChange" name="pay_mode">
+                  <block wx:for="{{form.pay_mode.items}}" wx:key="{{index}}">
+                    <block wx:if="{{!item.hidden}}">
+                      <label class="label-inline">
+                        <radio color='#09e' disabled="{{item.disabled}}" value='{{index}}' checked='{{form.pay_mode.activeId == index ? true : false }}' />{{item.label}}
+                      </label>
+                    </block>
+                  </block>
+                </radio-group>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 增值服务 -->
+      <view class="section increment-box">
+        <view class="weui-panel weui-panel_access">
+          <view class="weui-panel__hd title">增值服务</view>
+          <!-- 选择增值服务 -->
+          <view class="weui-panel__bd row-box">
+            <view class="weui-cell">
+              <view class="weui-cell__hd">
+                <view class="weui-label">选择增值服务</view>
+              </view>
+              <view class="weui-cell__bd">
+                <checkbox-group name="platform_ensure" bindchange="payChange">
+                  <block wx:for="{{form.platform_ensure.items}}" wx:key="{{index}}">
+                    <block wx:if="{{!item.hidden}}">
+                      <label class="label-inline">
+                        <checkbox color='#09e' value='{{index}}' disabled="{{item.disabled}}" checked='{{form.platform_ensure.activeId == index ? true : false }}' />{{item.label}}
+                      </label>
+                    </block>
+                  </block>
+                </checkbox-group>
+              </view>
+            </view>
+          </view>
+          <!-- 发票抬头 -->
+          <view class="weui-panel__bd row-box">
+            <view class="weui-cell">
+              <view class="weui-cell__hd">
+                <view class="weui-label">发票抬头</view>
+              </view>
+              <view class="weui-cell__bd">
+                <input name="invoice_title" value="{{invoice_title}}" placeholder='请输入发票抬头' />
+              </view>
+            </view>
+          </view>
+          <!-- 税号 -->
+          <view class="weui-panel__bd row-box">
+            <view class="weui-cell">
+              <view class="weui-cell__hd">
+                <view class="weui-label">税 号</view>
+              </view>
+              <view class="weui-cell__bd">
+                <input name="tax_no" value="{{tax_no}}" placeholder='请输入税号' />
+              </view>
+            </view>
+          </view>
+          <!-- 留言 -->
+          <view class="weui-panel__bd row-box">
+            <view class="weui-cell remark-cell">
+              <view class="weui-cell__hd">
+                <view class="weui-label">用户留言</view>
+              </view>
+              <view class="weui-cell__bd">
+                <textarea class="weui-textarea" name="remark" placeholder='请输入您的留言'></textarea>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 金额明细 -->
+      <view class="section price-detail-box">
+        <view class="weui-panel weui-panel_access">
+          <view class="detail-row">
+          <view class="weui-panel__bd row-box">
+            <view class="weui-cell">
+              <view class="weui-cell__hd weui-flex__item">
+                <view class="weui-label">订单金额</view>
+              </view>
+              <view class="weui-cell__bd money-box">
+                <text>￥</text>
+                <text class="money-num">{{form.total_amount}}</text>
+              </view>
+            </view>
+          </view>
+          <view class="weui-panel__bd row-box">
+            <view class="weui-cell">
+              <view class="weui-cell__hd weui-flex__item">
+                <view class="weui-label">质保服务费</view>
+              </view>
+              <view class="weui-cell__bd money-box">
+                <text>- ￥</text>
+                <text class="money-num">{{form.quality_amount}}</text>
+              </view>
+            </view>
+          </view>
+          </view>
+          <view class="weui-panel__bd row-box real-money-row">
+            <view class="weui-cell">
+              <view class="total-price-box">
+                <view class="text">实际支付：</view>
+                <view class="money-box total-money-box">
+                  <text>￥</text>
+                  <text class="money-num">{{form.real_amount}}</text>
+                </view>
+              </view>
+            </view>
+          </view>
+          <view class="weui-panel__bd row-box action-box">
+            <button form-type='submit' class="weui-btn" type="primary">提交订单</button>
+          </view>
+        </view>
+      </view>
+    </form>
+  </view>
+</view>

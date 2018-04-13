@@ -17,12 +17,15 @@
   left: 0;
   width: 100%;
 }
+.search-box .weui-search-bar{
+  transition: all .2s ease-in-out;
+}
 .search-fixed{
   position: fixed;
   z-index: 10;
   top: 0;
   width: 100%;
-  background: -webkit-linear-gradient(top, rgba(105,195,170, 1), rgba(105,195,170, 0.3));
+  background: -webkit-linear-gradient(top, rgba(0,153,238, 1), rgba(0,153,238, 0.3));
 }
 .keywords-search-box{
   padding: 0 10px;

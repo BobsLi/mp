@@ -2,29 +2,155 @@
 <view class='detail-box'>
   <view class='swiper-box'>
     <swiper class='' indicator-dots="{{productImg.options.indicatorDots}}" autoplay="{{productImg.options.autoplay}}" interval="{{productImg.options.interval}}" duration="{{productImg.options.duration}}">
-      <block wx:for-items="{{productImg.items}}" wx:key="{{item.id}}">
-        <swiper-item item-id="{{item.id}}">
-          <image class="swiper-img" src='{{item.img}}' mode='scaleToFill' width="100%"/>
+      <block wx:for-items="{{productInfo.img}}" wx:key="{{index}}">
+        <swiper-item item-id="{{index}}">
+          <image class="swiper-img" src='{{item}}' mode='scaleToFill' width="100%" />
         </swiper-item>
       </block>
     </swiper>
   </view>
   <view class="info-body">
-    <view class="product-name">【Seqmore】人全外显子测序-15G_建库测序&标准分析（Agilent V6</view>
-    <view class="base-info-box">
-      <view class='"weui-media-box__hd weui-media-box__hd_in-appmsg product-img-box'>
-        
+    <view class="info-section product-name">{{productInfo.name}}</view>
+    <view class="info-section weui-media-box_appmsg base-info-box">
+      <view class="weui-flex__item base-info-inline base-info-lt">
+        <view class="weui-flex row-box">
+          <view class="shallow-color row-lt">服务商</view>
+          <view class="weui-flex__item row-rt">{{productInfo.supplier_name}}</view>
+        </view>
+        <view class="weui-flex row-box">
+          <view class="shallow-color row-lt">规格</view>
+          <view class="weui-flex__item row-rt">{{productInfo.spec}}</view>
+        </view>
+        <view class="weui-flex row-box">
+          <view class="shallow-color row-lt">周期</view>
+          <view class="weui-flex__item row-rt">{{productInfo.period}}</view>
+        </view>
+        <block wx:for="{{productInfo.extend}}" wx:key="*this">
+          <view class="weui-flex row-box">
+            <view class="shallow-color row-lt">
+              {{item.extend_name}}
+            </view>
+            <view class="weui-flex__item row-rt">{{item.extend_attr}}</view>
+          </view>
+        </block>
       </view>
-      <view class="base-info-rt">
+      <view class="base-info-inline  base-info-rt">
         <view class="trade-box">
           <view class="trade-text">
             成交量
           </view>
           <view class="trade-num">
-            1
+            {{productInfo.order_num}}
+          </view>
+        </view>
+        <block wx:if="{{productInfo.up != 0}}">
+          <view class="dz-box">
+            <image class="dz-img" src="../../image/pl-detail/icon/praise.png"></image>
+            <view class="row-content dz-num">
+              {{productInfo.up}}
+            </view>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <!-- 价格组成方式 -->
+    <view class="info-section opt-box">
+      <view class="">
+        <block wx:if="{{productInfo.assemble_type == 1}}">
+          <block wx:for="{{productInfo.price_opt}}" wx:for-item="opt" wx:key="{{index}}">
+            <view class="weui-flex row-item opt-row">
+              <view class="shallow-color row-lt opt-row-lt">
+                {{opt.part_name}}
+              </view>
+              <view class="weui-flex__item opt-row-rt">
+                <block wx:for="{{opt.items}}" wx:for-item="optItem" wx:for-index="optIndex" wx:key="{{optIndex}}">
+                  <view class="opt-item {{opt.activeId == optIndex ? 'active-opt-item' : '' }}" bindtap="selectedOpt" data-opt_id="{{index}}" data-id="{{optIndex}}">
+                    {{optItem.part_display}}
+                  </view>
+                </block>
+              </view>
+            </view>
+          </block>
+        </block>
+        <block wx:else>
+          <block wx:for="{{productInfo.price_step}}" wx:for-item="step" wx:key="{{index}}">
+            <view class="weui-flex row-item step-row">
+              <view class="shallow-color row-lt step-row-lt">
+                {{step.part_name}}
+              </view>
+              <view class="weui-flex__item step-row-rt">
+                <view class="num-box">
+                  <view class="num-reduce" bindtap="reduceNum" data-id="{{index}}" data-name="step">-</view>
+                  <view class="num-input">
+                    <input type="number" data-id="{{index}}" data-name="step" value="{{step.default_part_num}}" bindinput="customNum"></input>
+                  </view>
+                  <view class="num-add" data-id="{{index}}" data-name="step" bindtap="addNum">+</view>
+                </view>
+              </view>
+            </view>
+          </block>
+        </block>
+      </view>
+    </view>
+
+    <!-- 数量和价格 -->
+    <view class="info-section other-box">
+      <view class="weui-flex row-item num-row">
+        <view class="shallow-color row-lt num-row-lt">
+          数量
+        </view>
+        <view class="weui-flex__item num-row-rt">
+          <view class="num-box">
+            <view class="num-reduce" bindtap="reduceNum" data-name="total">-</view>
+            <view class="num-input">
+              <input type="number" value="{{num}}" bindinput="customNum" data-name="total"></input>
+            </view>
+            <view class="num-add" bindtap="addNum" data-name="total">+</view>
           </view>
         </view>
       </view>
+      <view class="weui-flex row-item price-row">
+        <view class="shallow-color row-lt price-row-lt">
+          价格
+        </view>
+        <view class="weui-flex__item price-row-rt">
+          <view class="price-text money-box">
+            ￥
+            <text class="money-num">{{real_price}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 产品描述 -->
+    <view class="info-section des-box">
+      <view class="info-title">商品描述</view>
+    </view>
+  </view>
+
+  <view class="footer-box">
+    <view class="supplier-box" data-id="{{productInfo.supplier_id}}" bindtap='goSuppler'>
+      <view class="base-icon supplier-icon" style="background-image: url(https://www.genebang.com/img/product-browse/icon/collect.png);"></view>
+      <view class="base-text supplier-text">服务商</view>
+    </view>
+    <view class="share-box">
+      <button class="share-btn" open-type='share'></button>
+      <view class="base-icon share-icon" style="background-image: url(https://www.genebang.com/img/product-browse/icon/collect.png);"></view>
+      <view class="base-text share-text">分享</view>
+    </view>
+    <view class="fav-box" data-id="{{productInfo.id}}" bindtap="favProduct">
+      <block wx:if="{{productInfo.is_fav}}">
+        <view class="base-icon fav-icon" style="background-image: url(https://www.genebang.com/img/product-browse/icon/collect-hl.png);"></view>
+        <view class="base-text fav-text">已收藏</view>
+      </block>
+      <block wx:else>
+        <view class="base-icon fav-icon" style="background-image: url(https://www.genebang.com/img/product-browse/icon/collect.png);"></view>
+        <view class="base-text fav-text">收藏</view>
+      </block>
+    </view>
+    <view class="weui-flex__item buyer-box" bindtap='buyProduct'>
+      立即下单
     </view>
   </view>
 </view>

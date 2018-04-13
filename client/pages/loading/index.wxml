@@ -1,0 +1,6 @@
+<!--pages/loading/index.wxml-->
+<view class="loading-box">
+  <view class="title">
+    <image src='../../image/loading/'></image>
+  </view>
+</view>

@@ -6,6 +6,25 @@ page{
   box-sizing: border-box;
   font-size: 28rpx;
   color: #333;
+  background-color: #F2f2f2;
+}
+.section{
+  margin-top: 20rpx;
+}
+.section:first-of-type{
+  margin-top: 0;
+}
+.primary-color{
+  color: #0099EE;
+}
+.deep-color{
+  color: #333;
+}
+.normal-color{
+  color: #666;
+}
+.shallow-color{
+  color: #999;
 }
 .container {
   height: 100%;
@@ -27,4 +46,51 @@ page{
   width: 13px;
   height: 13px;
   margin-right: 4px;
+}
+
+/* 数量加减输入框 */
+.num-box{
+  display: flex;
+}
+.num-box .num-reduce, .num-box .num-input, .num-box .num-add {
+  height: 60rpx;
+  width: 60rpx;
+  line-height: 58rpx;
+  text-align: center;
+  border: 1px solid #eee;
+}
+.num-box .num-input{
+  width: 90rpx;
+}
+.num-box .num-input input{
+  height: 100%;
+  width: 100%;
+}
+
+/* 金钱显示样式 */
+.money-box{
+  color: #fe2b21;
+}
+.money-box .money-num{
+  font-size: 32rpx;
+}
+
+.info-title{
+  padding: 30rpx 20rpx;
+  background-color: #fff;
+  width: 100%;
+  font-size: 32rpx;
+}
+.title{
+  color: #333;
+  font-size: 32rpx;
+}
+.label-inline{
+  vertical-align: middle;
+  display: inline-block;
+  margin-right: 20rpx;
+  padding: 10rpx 0;
+}
+.label-inline:last-child{
+  margin-right: 0;
 }

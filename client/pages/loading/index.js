@@ -1,4 +1,4 @@
-// pages/pl/suppler-info.js
+// pages/loading/index.js
 Page({
 
   /**

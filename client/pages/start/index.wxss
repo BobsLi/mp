@@ -1,0 +1,8 @@
+/* pages/start/index.wxss */
+.title-box{
+  background-color: #fff;
+}
+.title-img{
+  max-width: 100%;
+  width: 100%;
+}
