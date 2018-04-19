@@ -144,7 +144,7 @@
               </view>
               <view class="weui-cell__bd money-box">
                 <text>￥</text>
-                <text class="money-num">{{form.total_amount}}</text>
+                <text class="money-num">{{orderInfo.real_price}}</text>
               </view>
             </view>
           </view>
@@ -154,7 +154,7 @@
                 <view class="weui-label">质保服务费</view>
               </view>
               <view class="weui-cell__bd money-box">
-                <text>- ￥</text>
+                <text>{{form.quality_amount >= 0 ? "+" : "-" }} ￥</text>
                 <text class="money-num">{{form.quality_amount}}</text>
               </view>
             </view>
@@ -166,7 +166,7 @@
                 <view class="text">实际支付：</view>
                 <view class="money-box total-money-box">
                   <text>￥</text>
-                  <text class="money-num">{{form.real_amount}}</text>
+                  <text class="money-num">{{real_amount}}</text>
                 </view>
               </view>
             </view>

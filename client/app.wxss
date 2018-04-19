@@ -75,10 +75,14 @@ page{
   font-size: 32rpx;
 }
 
-.info-title{
-  padding: 30rpx 20rpx;
+.info-title-box{
+  padding: 30rpx 0;
   background-color: #fff;
   width: 100%;
+}
+.info-title-box .title-text{
+  padding: 0 20rpx;
+  border-left: 8rpx solid #0099EE;
   font-size: 32rpx;
 }
 .title{

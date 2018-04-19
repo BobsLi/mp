@@ -1,6 +1,10 @@
 /* pages/pl/detail.wxss */
+@import "../../libs/wxParse/wxParse.wxss";
+page{
+  background-color: #fff;
+}
 .info-body{
-  padding: 0 30rpx;
+  padding: 0 30rpx 120rpx;
 }
 .swiper-img{
   width: 100%;

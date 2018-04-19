@@ -1,4 +1,5 @@
 // pages/pl/detail.js
+var WxParse = require("../../libs/wxParse/wxParse.js");
 const app = getApp();
 const host = app.globalData.params.apiHost;
 const storageHost = app.globalData.params.storageHost;
@@ -28,7 +29,7 @@ Page({
     "real_price": "123",//实际价格
     "num": "1",//购买数量
     "productInfo": {
-      "id": "DFDSDG",
+      "id": "DFDSDG",//产品id，加密
       "name": "产品名称",
       "img": ["http://storage.genebang.com/image/cGF0aD0yMDE4MDIvMTUxNzQ1NTM4MTg3Ni5wbmc=", "http://storage.genebang.com/image/cGF0aD0yMDE4MDIvMTUxNzg4NzgwNzQ4Ny5wbmc=", "http://storage.genebang.com/image/cGF0aD1kZWZhdWx0L3Byb2R1Y3QuanBn"],//产品图片
       "assemble_type": 1,//产品报价组成方式
@@ -40,6 +41,7 @@ Page({
       "up": "1",//好评数
       "default_price": "1231", //产品默认价格
       "is_fav": false, //是否收藏了该商品
+      "description": '<div class="content"><p><span> &nbsp; &nbsp;链特异性转录组测序（strand-specific RNA sequencing）是指在构建测序文库时，利用Illumina高保真Taq酶将mRNA链的方向信息保存到测序文库中。测序后的数据分析可确定转录本是来自正义还是反义DNA链。与普通转录组测序相比，它更能准确地统计转录本的数量和确定基因的结构，同时可以发现更多的反义转录本，目前被广泛地应用于研究基因结构和基因表达调控等领域范围。</span></p><div class="img-show-box"><img src="http://storage.genebang.com/image/cGF0aD0yMDE4MDMvMTUyMjMxMzYzOTUxOC5wbmcmdz0zNTAmaD0zNTA=" title="【Seqmore】原核有参链特异性转录组测序（有参）" alt="【Seqmore】原核有参链特异性转录组测序（有参）"></div></div>', //产品描述
       "extend": [ //扩展属性
         {
           'extend_name': '扩展名1',
@@ -410,48 +412,18 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
-    var _this = this;
-    wx.showToast({
-      title: '',
-      icon: 'loading'
-    })
-    // wx.request({
-    //   url: host + 'test/get-product-info',
-    //   data: options,
-    //   success: function (data) {
-    //     console.log(data);
-    //     if (data.data.code == 200) {
-    //       var result = data.data.data;
-    //       wx.showToast({
-    //         title: '',
-    //         icon: 'success'
-    //       })
-    //       wx.setNavigationBarTitle({
-    //         title: result.info.name,
-    //         success: function(){
-
-    //         }
-    //       })
-    //       console.log(result.img);
-    //       _this.setData({
-    //         imgArr: result.img,
-    //       });
-    //     } else {
-    //       wx.showModal({
-    //         title: '提示',
-    //         content: '没有获取到数据',
-    //         showCancel: false,
-    //       })
-    //     }
-    //   },
-    //   fail: function (data) {
-    //     console.log(data);
-    //   },
-    //   complete: function (data) {
-    //     wx.hideToast();
-    //   }
-    // })
+  onLoad: function (query) {
+    if (query.id){
+        // this.getProductInfo(query);
+      var description = this.data.productInfo.description;
+      var _this = this;
+      console.log(description);
+      WxParse.wxParse("description", 'html', description, _this, 5);
+    }else{
+      wx.navigateBack({
+        
+      })
+    }
   },
 
   /**
@@ -501,5 +473,57 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+
+  /**
+   * 获取产品信息
+   */
+  getProductInfo: function(query){
+    var _this = this;
+    wx.showToast({
+      title: '',
+      icon: 'loading'
+    })
+    wx.request({
+      url: host + '/product/get-product-info',
+      data: query,
+      success: function (res) {
+        console.log(res);
+        if (res.statusCode == 200) {
+          var data = res.data;
+          if (data.code == 200) {
+            var result = data.data;
+            wx.showToast({
+              title: '',
+              icon: 'success'
+            })
+            wx.setNavigationBarTitle({
+              title: result.info.name,
+            })
+            _this.setData({
+              "productInfo": result,
+            });
+          } else {
+            wx.showModal({
+              title: '提示',
+              content: '没有获取到数据',
+              showCancel: false,
+            })
+          }
+        }else{
+          wx.showModal({
+            title: '提示',
+            content: '获取数据失败!',
+            showCancel: false,
+          })
+        }
+      },
+      fail: function (data) {
+        console.log(data);
+      },
+      complete: function (data) {
+        wx.hideToast();
+      }
+    })
   }
 })

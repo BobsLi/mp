@@ -1,4 +1,5 @@
 <!--pages/pl/detail.wxml-->
+<import src="../../libs/wxParse/wxParse.wxml"/> 
 <view class='detail-box'>
   <view class='swiper-box'>
     <swiper class='' indicator-dots="{{productImg.options.indicatorDots}}" autoplay="{{productImg.options.autoplay}}" interval="{{productImg.options.interval}}" duration="{{productImg.options.duration}}">
@@ -125,7 +126,14 @@
 
     <!-- 产品描述 -->
     <view class="info-section des-box">
-      <view class="info-title">商品描述</view>
+      <view class="info-title-box">
+        <text class="title-text">商品描述</text>
+      </view>
+      <view class="info-bd">
+        <view class="wxParse">
+            <template is="wxParse" data="{{wxParseData:description.nodes}}"/>
+        </view>
+      </view>
     </view>
   </view>
 
