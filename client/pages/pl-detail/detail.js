@@ -378,7 +378,7 @@ Page({
     orderInfo.spec = nowProductInfo.spec;
     orderInfo.period = nowProductInfo.period;
     orderInfo.num = this.data.num;
-    orderInfo.real_price = this.data.real_price;
+    orderInfo.trade_amount = this.data.real_price;
     orderInfo.extend = nowProductInfo.extend;
     orderInfo.price_opt = _priceOpt;
     orderInfo.price_step = priceStep;

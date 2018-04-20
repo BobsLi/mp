@@ -9,7 +9,8 @@
     "pages/index/index",
     "pages/logs/logs",
     "pages/search/index",
-    "pages/supplier-info/index"
+    "pages/supplier-info/index",
+    "pages/buyer-order/index"
   ],
   "window": {
     "backgroundTextStyle": "light",

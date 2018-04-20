@@ -38,7 +38,7 @@
                   <view class="weui-flex">
                     <view class="weui-flex__item money-box">
                       <text>￥</text>
-                      <text class="money-num price">{{orderInfo.real_price}}</text>
+                      <text class="money-num price">{{orderInfo.trade_amount}}</text>
                     </view>
                     <text class='num'>x{{orderInfo.num}}</text>
                   </view>
@@ -60,10 +60,10 @@
               </view>
               <view class="weui-cell__bd">
                 <radio-group bindchange="payChange" name="pay_mode">
-                  <block wx:for="{{form.pay_mode.items}}" wx:key="{{index}}">
+                  <block wx:for="{{form.pay_mode}}" wx:key="{{index}}">
                     <block wx:if="{{!item.hidden}}">
                       <label class="label-inline">
-                        <radio color='#09e' disabled="{{item.disabled}}" value='{{index}}' checked='{{form.pay_mode.activeId == index ? true : false }}' />{{item.label}}
+                        <radio color='#09e' disabled="{{item.disabled}}" value='{{index}}' checked='{{item.checked}}' />{{item.label}}
                       </label>
                     </block>
                   </block>
@@ -85,11 +85,11 @@
                 <view class="weui-label">选择增值服务</view>
               </view>
               <view class="weui-cell__bd">
-                <checkbox-group name="platform_ensure" bindchange="payChange">
-                  <block wx:for="{{form.platform_ensure.items}}" wx:key="{{index}}">
+                <checkbox-group name="platform_ensure" bindchange="platformChange">
+                  <block wx:for="{{form.platform_ensure}}" wx:key="{{index}}">
                     <block wx:if="{{!item.hidden}}">
                       <label class="label-inline">
-                        <checkbox color='#09e' value='{{index}}' disabled="{{item.disabled}}" checked='{{form.platform_ensure.activeId == index ? true : false }}' />{{item.label}}
+                        <checkbox color='#09e' value='{{index}}' disabled="{{item.disabled}}" checked='{{item.checked}}' />{{item.label}}
                       </label>
                     </block>
                   </block>
@@ -104,7 +104,7 @@
                 <view class="weui-label">发票抬头</view>
               </view>
               <view class="weui-cell__bd">
-                <input name="invoice_title" value="{{invoice_title}}" placeholder='请输入发票抬头' />
+                <input name="invoice_title" value="{{invoice_title.value}}" disabled="{{invoice_title.disabled}}" placeholder='请输入发票抬头' bindinput="changeInvoiceTitle"/>
               </view>
             </view>
           </view>
@@ -115,7 +115,7 @@
                 <view class="weui-label">税 号</view>
               </view>
               <view class="weui-cell__bd">
-                <input name="tax_no" value="{{tax_no}}" placeholder='请输入税号' />
+                <input name="tax_no" value="{{tax_no.value}}"  disabled="{{tax_no.disabled}}" placeholder='请输入税号'  bindinput="changeTaxNo"/>
               </view>
             </view>
           </view>
@@ -144,7 +144,7 @@
               </view>
               <view class="weui-cell__bd money-box">
                 <text>￥</text>
-                <text class="money-num">{{orderInfo.real_price}}</text>
+                <text class="money-num">{{orderInfo.trade_amount}}</text>
               </view>
             </view>
           </view>
@@ -154,8 +154,8 @@
                 <view class="weui-label">质保服务费</view>
               </view>
               <view class="weui-cell__bd money-box">
-                <text>{{form.quality_amount >= 0 ? "+" : "-" }} ￥</text>
-                <text class="money-num">{{form.quality_amount}}</text>
+                <text>{{quality_amount >= 0 ? "+" : "-" }} ￥</text>
+                <text class="money-num">{{quality_amount}}</text>
               </view>
             </view>
           </view>
@@ -172,7 +172,8 @@
             </view>
           </view>
           <view class="weui-panel__bd row-box action-box">
-            <button form-type='submit' class="weui-btn" type="primary">提交订单</button>
+            <button wx:if="{{!comfirm.loading}}" form-type='submit' class="weui-btn" type="primary">提交订单</button>
+            <button wx:else form-type='submit' disabled="true" loading="true"  class="weui-btn" type="primary">正在提交订单，请稍后...</button>
           </view>
         </view>
       </view>
