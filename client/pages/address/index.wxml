@@ -1,0 +1,18 @@
+<!--index.wxml-->
+<view class="container">
+  <view class="info_list">
+    <block wx:for="{{addressList}}">
+        <view class="weui_cell">
+            <view class="address_block">
+                <view class="address_text">{{item.name}}</view>
+                <view class="address_text address_mobile">{{item.mobile}}</view>
+            </view>
+            <view class="address_block">
+                <view class="address_text">{{item.address}}</view>
+            </view>
+            <view class="address_edit">编</view>
+        </view>
+    </block>
+  </view>
+  <navigator url="/pages/address/add" hover-class="navigator-hover" class="address_add">新建收货地址</navigator>
+</view>

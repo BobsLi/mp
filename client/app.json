@@ -1,15 +1,15 @@
 {
   "pages": [
+    "pages/supplier-info/index",
+    "pages/search/index",
+    "pages/user/index",
     "pages/comfirm-order/index",
     "pages/pl-detail/detail",
     "pages/pl/index",
     "pages/start/index",
-    "pages/user/index",
     "pages/order-list/index",
     "pages/index/index",
     "pages/logs/logs",
-    "pages/search/index",
-    "pages/supplier-info/index",
     "pages/buyer-order/index"
   ],
   "window": {

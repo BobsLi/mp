@@ -1,2 +1,53 @@
 <!--pages/search/index.wxml-->
-<text>pages/search/index.wxml</text>
+<view class="type-search-box">
+  <view class="header">
+    <view class="weui-flex search-wrap">
+      <icon type='search' class="search-icon"></icon>
+      <input placeholder='请输入搜索内容(至少2字符)'  class="search-input" value='{{keywords}}' bindinput="changeInput"></input>
+      <button class="search-btn" bindtap='searchInput'>搜索</button>
+    </view>
+  </view>
+  <view class="body">
+    <view class="body-left">
+      <view class="weui-flex">
+        <scroll-view class=" scroll-box" style='height: {{scrollHeight}}px;' scroll-y="true">
+          <block wx:if="{{activeObj.id}}">
+            <view class="scroll-item parent-item">
+              <view class="weui-flex" data-id="{{activeObj.id}}" bindtap='changeActive'>
+                <image class="reback-icon" src='../../image/icon/rt-arrow-hl.png'></image>
+                <view class="weui-flex__item reback-text">{{activeObj.name}}</view>
+              </view>
+            </view>
+          </block>
+          <block wx:for="{{showTypeList.last}}" wx:key="{{index}}" wx:for-index="cindex" wx:for-item="cvalue">
+            <view class="scroll-item {{cvalue.isActive ? 'active-item' : '' }}">
+              <view class="item-text" data-id="{{cvalue.id}}" bindtap='changeActive'>{{cvalue.name}}</view>
+            </view>
+          </block>
+        </scroll-view>
+      </view>
+    </view>
+    <view class="body-right" style="padding-left: {{scrollWidth}}px">
+      <scroll-view class="rt-scroll-box" style='max-height: {{scrollHeight}}px;' scroll-y="true">
+        <view class='title'>
+          <text>{{activeObj.name ? activeObj.name :"全部分类" }}</text>
+        </view>
+        <view class="list-box">
+          <block wx:for="{{productList}}" wx:key="{{index}}">
+            <view class="list-row">
+              <navigator url='/pages/pl-detail/detail?id={{item.id}}'>
+                <view class="weui-flex list-inline">
+                  <view class="img-box">
+                    <image class="product-img" src='{{item.img}}'></image>
+                  </view>
+                  <view class="product-name">{{item.name}}</view>
+                  <view class="product-price">￥{{item.price}}</view>
+                </view>
+              </navigator>
+            </view>
+          </block>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+</view>

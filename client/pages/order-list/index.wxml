@@ -1,10 +1,11 @@
-<view class="container">
-    <view class="status-box">
+<view class="container ">
+     <view class="status-box">
         <view bindtap="statusTap" class="status-label {{index == currentType ? 'active' : ''}}" wx:for-items="{{statusType}}" wx:key="{{index}}" data-index="{{index}}">
             {{item}}
             <view class="{{tabClass[index]}}"></view>
         </view>
-    </view>
+    </view> 
+    <view class='clear'></view>
     <view class="no-order" hidden="{{orderList ? true : false}}">
         <image src="/images/no-order.png" class="no-order-img"></image>
         <view class="text">暂无订单</view>
@@ -16,24 +17,48 @@
                 <view class="date-box">下单时间：{{item.order.order_time}}</view>
                 <view class="status {{(item.status==-1 || item.status==4) ? '':'red'}}">{{item.statusStr}}</view>
             </view>
-            <view class="goods-info" bindtap="orderDetail" data-id="{{item.id}}">
+            <view class="goods-info" bindtap="orderDetail" data-id="{{item.id}}"> 
                 <view class="goods-des">
-                   <view>{{item.order.order_no}} </view>
-                   <view wx:if="{{item.remark && item.remark != ''}}">备注： {{item.remark}}</view>
+                   <view>{{item.technologyInfo.name}}*{{item.amount}} </view>
                 </view>
             </view>
             <view >
-                <scroll-view class="goods-img-container" scroll-x="true">
-                    <view class="img-box" wx:for-items="{{goodsMap[item.id]}}" wx:key="{{index}}">
-                        <image src="{{item.pic}}" class="goods-img"></image>
-                    </view>
-                </scroll-view>
+              <view wx:if="{{item.order.order_notes && item.order.order_notes != ''}}" class='remark'>备注： {{item.order.order_notes}}</view>
             </view>
             <view class="price-box">
-                <view class="total-price">合计：¥ {{item.amountReal}}</view>
-                <view class="btn cancel-btn" hidden="{{item.status==0? fslse : true}}" bindtap="cancelOrderTap"  data-id="{{item.id}}">取消订单</view>
-                <view class="btn topay-btn" hidden="{{item.status==0? fslse : true}}" bindtap="toPayTap" data-id="{{item.id}}" data-money="{{item.amountReal}}">马上付款</view>        
+              <view class="total-price">合计：¥ {{item.order.trade_amount}}</view>
+              <button size='mini' type='primary' hidden="{{item.order.status==1 ? false : true }}" bindtap="receiveOrderTap"  data-id="{{item.id}}">接单</button>
+              <button size='mini' type='warn' hidden="{{item.order.status==1 ? false : true }}" bindtap="cancelOrderTap"  data-id="{{item.id}}">拒绝</button>
+              <block  wx:if="{{item.order.status==3}}">
+                
+                <view wx:if="{{item.order.supplier_cash_status==3}}">已收款</view>
+                <button wx:else size='mini' bindtap="finishCashTap"  data-id="{{item.id}}">收款</button>
+                
+
+                <view wx:if="{{item.order.service_status==2}}">
+                  <view wx:if="{{item.order.service_status==3}}">买家已确认完成</view>
+                  <view wx:else>等待验收中</view>
+                </view>
+            
+                <button wx:else size='mini' type='primary' bindtap="finishOrderTap"  data-id="{{item.id}}">完成</button>
+          
+              </block >
+              <view class="btn topay-btn" hidden="{{item.status==0? fslse : true}}" bindtap="toPayTap" data-id="{{item.id}}" data-money="{{item.amountReal}}">马上付款</view>        
             </view>  
         </view>
     </view>
 </view>
+<view class="weui-loadmore" hidden="{{isHideLoadMore}}">
+  <view class="weui-loading"></view>
+  <view class="weui-loadmore__tips">正在加载</view>
+</view>
+<modal hidden="{{hiddenmodalput}}" title="确认接单"  bindcancel="cancel" bindconfirm="confirm">  
+  <view class="section">
+    <view class="section__title">优惠金额</view>
+    <input type='digit' bindinput='discountInput' auto-focus/>
+  </view>
+  <view class="section">
+    <view class="section__title">附加说明</view>
+    <textarea bindinput='discountText' bindblur="bindTextAreaBlur" auto-focus/>
+  </view>
+</modal>  

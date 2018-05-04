@@ -1,0 +1,11 @@
+/* pages/address/add.wxss */
+.container {
+  background-color: #F2f2f2;
+}
+.input{
+  background-color:white; 
+}
+.add_address_block{
+  padding-top:10px;
+  display: inline-block;
+}

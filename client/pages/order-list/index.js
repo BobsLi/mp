@@ -3,14 +3,88 @@ Page({
   data:{
     statusType: ["所有订单", "未处理", "进行中", "已完成", "已取消"],
     currentType:0,
-    tabClass: ["", "", "", "", ""]
+    tabClass: ["", "", "", "", ""],
+    hiddenmodalput: true,
+    discountFee:0,
+    auditNotes:'',
+    nowPage:1,
+  },
+
+  discountInput: function (e) {
+    this.setData({
+      discountFee: e.detail.value
+    })
+  },
+
+  discountText: function (e) {
+    this.setData({
+      auditNotes: e.detail.value
+    })
+  },
+
+  //取消按钮  
+  cancel: function () {
+    this.setData({
+      hiddenmodalput: true
+    });
+  },
+  //确认  
+  confirm: function () {
+    console.log(this.data.orderId), 
+    console.log(this.data.discountFee), 
+    console.log(this.data.auditNotes), 
+    wx.showToast({
+      title: '提交中',
+      icon: 'loading',
+      duration: 3000
+    });
+    var postData = {
+      order_id: this.data.orderId,
+      discount_fee: this.data.discountFee,
+      audit_notes: this.data.auditNotes,
+    };
+    console.log(postData);
+    wx.request({
+      url: 'http://wapi.gbv3.cn/supplier/receive-order',
+      data: postData,
+      success: (res) => {
+        console.log(res);
+        if (res.data.code == 200) {
+          wx.showToast({
+            title: '已完成',
+            icon: 'success',
+            duration: 3000
+          });
+          wx.hideLoading();
+          wx.redirectTo({
+            url: '../order-list/index',
+          })
+        } else {
+          wx.showToast({
+            title: '提交失败',
+            icon: 'success',
+            duration: 3000
+          });
+          wx.hideLoading();
+        }
+      }
+    })
+    this.setData({
+      hiddenmodalput: true
+    })
   },
   statusTap:function(e){
      var curType =  e.currentTarget.dataset.index;
-     this.data.currentType = curType
      this.setData({
-       currentType:curType
+       currentType: curType
      });
+     if (curType > 1){
+       curType = curType + 1;
+     }
+     this.setData({
+       nowPage: 1,
+     });
+     this.data.currentType = curType
      this.onShow();
   },
   orderDetail : function (e) {
@@ -19,6 +93,19 @@ Page({
       url: "/pages/order-details/index?id=" + orderId
     })
   },
+
+  //接单
+  receiveOrderTap: function (e) {
+    var that = this;
+    this.setData({
+      orderId: e.currentTarget.dataset.id,
+    })
+    this.setData({
+      hiddenmodalput: !this.data.hiddenmodalput,
+    })  
+  },
+
+  //拒绝订单
   cancelOrderTap:function(e){
     var that = this;
     var orderId = e.currentTarget.dataset.id;
@@ -29,13 +116,92 @@ Page({
         if (res.confirm) {
           wx.showLoading();
           wx.request({
-            url: 'https://api.it120.cc/' + app.globalData.subDomain + '/order/close',
+            url: 'http://wapi.gbv3.cn/supplier/refuse-order',
             data: {
-              token: app.globalData.token,
-              orderId: orderId
+              order_id: orderId
             },
             success: (res) => {
+              wx.showToast({
+                title: '已拒绝此订单',
+                icon: 'success',
+                duration: 3000
+              });
               wx.hideLoading();
+              wx.redirectTo({
+                url: '../order-list/index',
+              })
+              if (res.data.code == 0) {
+                that.onShow();
+              }
+            }
+          })
+        }
+      }
+    })
+  },
+
+  //完成收款
+  finishCashTap: function (e) {
+    var that = this;
+    var orderId = e.currentTarget.dataset.id;
+    wx.showModal({
+      title: '确定已收款吗？',
+      content: '',
+      success: function (res) {
+        if (res.confirm) {
+          wx.showLoading();
+          wx.request({
+            url: 'http://wapi.gbv3.cn/supplier/finish-cash',
+            data: {
+              order_id: orderId
+            },
+            success: (res) => {
+              console.log(res);
+              wx.showToast({
+                title: '成功',
+                icon: 'success',
+                duration: 3000
+              });
+              wx.hideLoading();
+              wx.redirectTo({
+                url: '../order-list/index',
+              })
+              if (res.data.code == 0) {
+                that.onShow();
+              }
+            }
+          })
+        }
+      }
+    })
+  },
+
+  //完成订单
+  finishOrderTap: function (e) {
+    var that = this;
+    var orderId = e.currentTarget.dataset.id;
+    wx.showModal({
+      title: '确定要完成该订单吗？',
+      content: '',
+      success: function (res) {
+        if (res.confirm) {
+          wx.showLoading();
+          wx.request({
+            url: 'http://wapi.gbv3.cn/supplier/finish-order',
+            data: {
+              order_id: orderId
+            },
+            success: (res) => {
+              console.log(res);
+              wx.showToast({
+                title: '成功',
+                icon: 'success',
+                duration: 3000
+              });
+              wx.hideLoading();
+              wx.redirectTo({
+                url: '../order-list/index',
+              })
               if (res.data.code == 0) {
                 that.onShow();
               }
@@ -145,6 +311,9 @@ Page({
       openid: app.globalData.token,
       status: that.data.currentType,
     };
+    this.setData({
+      nowStatus: that.data.currentType,
+    })
     console.log(postData);
     this.getOrderStatistics();
     wx.request({
@@ -169,6 +338,50 @@ Page({
     })
     
   },
+
+  //加载更多
+  onReachBottom: function () {
+    console.log('加载更多')
+    var that = this;
+    this.setData({
+      nowPage: that.data.nowPage + 1,
+    });
+    var postData = {
+      openid: app.globalData.token,
+      status: that.data.nowStatus,
+      page: that.data.nowPage,
+    };
+    console.log(postData);
+    this.getOrderStatistics();
+    wx.request({
+      url: 'http://wapi.gbv3.cn/supplier/order-list',
+      data: postData,
+      success: (res) => {
+        console.log(res);
+        wx.hideLoading();
+        if (res.data.code == 200) {
+          console.log(res.data.data);
+          that.setData({
+            orderList: this.data.orderList.concat(res.data.data),
+          });
+          this.setData({
+            isHideLoadMore: false,
+          })
+        } else {
+          this.setData({
+            orderList: null,
+            logisticsMap: {},
+            goodsMap: {}
+          });
+        }
+      }
+    })
+    setTimeout(() => {
+      this.setData({
+        isHideLoadMore: true,
+      })
+    }, 1000);
+  },
   onHide:function(){
     // 生命周期函数--监听页面隐藏
  
@@ -181,8 +394,8 @@ Page({
     // 页面相关事件处理函数--监听用户下拉动作
    
   },
-  onReachBottom: function() {
-    // 页面上拉触底事件的处理函数
+  // onReachBottom: function() {
+  //   // 页面上拉触底事件的处理函数
   
-  }
+  // }
 })

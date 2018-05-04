@@ -1,6 +1,7 @@
 .container{
     width: 100%;
     background-color: #F2f2f2;
+    display:inline;
 }
 .status-box{
     width:100%;
@@ -10,6 +11,11 @@
     justify-content: space-between;
     align-items: center;
     background-color: #fff;
+}
+.clear{
+    clear:both;
+    height:0;
+    overflow:hidden;
 }
 .status-box .status-label{
     width: 150rpx;
@@ -67,7 +73,13 @@
 .order-list .a-order{
     width: 100%;
     background-color: #fff;
-    margin-top: 100rpx;
+    margin-top: 60rpx;
+}
+.order-list :first-child{
+    margin-top: 10rpx;
+}
+.order-list .remark{
+  font-size: 25rpx;
 }
 .order-list .a-order .order-date{
     padding: 0 30rpx;
@@ -151,7 +163,15 @@
 }
 .a-order .price-box .cancel-btn{
     border: 1rpx solid #ccc;
-    position: absolute;
+    background-color: #e64340;
+    color: #fff;
+    right: 216rpx;
+    top:20rpx;
+}
+.a-order .price-box .receive-btn{
+    border: 1rpx solid #ccc;
+    background-color: e64340;
+    color: #fff;
     right: 216rpx;
     top:20rpx;
 }

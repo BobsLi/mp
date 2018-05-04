@@ -1,8 +1,10 @@
 //app.js
+let _ = require("libs/lodash/lodash.js");
 const params = require("constants/params.js");
 App({
   onLaunch: function (options) {
     // console.log(options);
+    this.login();
     // 展示本地存储能力
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
@@ -82,8 +84,130 @@ App({
     //   }
     // })
   },
+
+  /**
+   * 登录
+   */
+  login: function(){
+    var _this = this;
+    var globalData = _this.globalData;
+    if (globalData.token){ //先看有没有登录的唯一token
+      wx.request({
+        url: params.apiHost + '/user/check-login',
+        data: {
+          token: token,
+        },
+        success: function (res) {
+          if (res.statusCode == 200) {
+            var data = res.data;
+            if (data.code == 200) {
+              var result = data.data;
+              if (!result) {
+                globalData.token = null;
+                _this.login();
+              }
+              return ;
+            } else {
+              globalData.token = null;
+              _this.login();
+            }
+          } else {
+            globalData.token = null;
+            _this.login();
+          }
+        },
+        fail: function () {
+          globalData.token = null;
+          _this.login();
+        },
+        complete: function () {
+        },
+      })
+    }else{
+      wx.login({
+        success: function(res){
+          // console.log(res);
+          if(res.code){
+            _this.getUserInfo(function (data) {
+              data.code = res.code;
+              // console.log(data);
+              wx.request({
+                url: params.apiHost + '/user/login',
+                method: "POST",
+                data: {
+                  code: res.code,
+                },
+                success: function (res) {
+                  if (res.statusCode == 200) {
+                    var data = res.data;
+                    if (data.code == 200) {
+                      var result = data.data;
+                      if (result) {
+                        globalData.token = result.token;
+                      }
+                    } else {
+                      wx.showModal({
+                        title: '错误',
+                        content: data.msg,
+                        showCancel: false,
+                      })
+                    }
+                  } else {
+                    wx.showModal({
+                      title: '错误',
+                      content: "无法登陆，请重试。",
+                      showCancel: false,
+                    })
+                  }
+                },
+                fail: function () {
+                  wx.showModal({
+                    title: '错误',
+                    content: "无法登陆，请重试。",
+                    showCancel: false,
+                  })
+                },
+                complete: function () {
+                },
+              })
+            });
+          }else{
+            wx.showModal({
+              title: '错误',
+              content: "登录失败!",
+              showCancel: false,
+            })
+          }
+        }
+      })
+    }
+  },
+
+  /**
+   * 获取用户信息
+   */
+  getUserInfo: function(call){
+    var _this = this;
+      wx.getUserInfo({
+        success: function(res){
+          _this.globalData.userInfo = res.userInfo;
+          if(call){
+            call(res);
+          }
+        },
+        fail: function(){
+          wx.showModal({
+            title: '错误',
+            content: '获取用户信息失败',
+            showCancel: false,
+          })
+        },
+      });
+  },
+
   globalData: {
     userInfo: null,
     params: params,
+    token: null,
   }
 })

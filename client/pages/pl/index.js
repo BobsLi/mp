@@ -76,10 +76,13 @@ Page({
       ],
     },
 
-    //技术服务产品对象
-    "product": {
+    "productOptions": {
       "page": 1, //当前页数
       "per_page": 10, //每一页显示的条数,
+    },
+
+    //技术服务产品对象
+    "product": {
       "is_last": false, //获取的是否是最后一页的数据,
       "items": [ //数据列表
         {
@@ -169,36 +172,8 @@ Page({
       title: '',
       icon: 'loading'
     })
-    // wx.request({
-    //   url: params.apiHost + 'test/get-product-list',
-    //   data: {},
-    //   success: function (data) {
-    //     console.log(data);
-    //     if(data.data.code == 200){
-    //       wx.showToast({
-    //         title: '',
-    //         icon: 'success'
-    //       })
-    //       var productList = data.data.data;
-    //       console.log(productList);
-    //       _this.setData({
-    //         list: productList,
-    //       });
-    //     }else{
-    //       wx.showModal({
-    //         title: '提示',
-    //         content: '没有获取到数据',
-    //         showCancel: false,
-    //       })
-    //     }
-    //   },
-    //   fail: function(data){
-    //     console.log(data);
-    //   },
-    //   complete: function(data){
-    //     wx.hideToast();
-    //   }
-    // })
+
+    this.getProduct();
   },
 
   /**
@@ -241,16 +216,7 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-    if (this.data.product.is_last){
-      this.setData({
-        "isShowLoading": false,
-      });
-    }else{
-      this.setData({
-        "isShowLoading": true,
-      });
-    }
-    // this.getProduct(true);
+    this.getProduct(true);
   },
 
   /**
@@ -276,18 +242,21 @@ Page({
   getStaticData: function(){
     var _this = this;
     wx.request({
-      url: host + '/test/static-data',
+      url: host + '/product/static-data',
       success: function(res){
         console.log(res);
         if (res.statusCode == 200){
           var data = res.data;
-          _this.setData({
-            "keywords_list": data.keywords_list,
-            "type": {
-              "activeId": data.type_arr[0].id,
-              "items": data.type_arr,
-            },
-          });
+          if (data.code == 200) {
+            data = data.data;
+            _this.setData({
+              "keywords_list": data.keywords_list,
+              "type": {
+                "activeId": data.type_arr[0].id,
+                "items": data.type_arr,
+              },
+            });
+          }
         } else {
           wx.showModal({
             title: '错误',
@@ -352,69 +321,83 @@ Page({
   getProduct: function (add) {
     let data = this.data;
     let product = data.product;
-    var options = {
-      "type_id": data.type.activeId,
-      "keywords": data.keywords,
-      "page": parseInt(product.page) + 1,
-      "per_page": product.per_page,
-    };
-    var _this = this;
-    wx.request({
-      url: host + '/product/get-product-list',
-      data: options,
-      fail: function (e) {
-        wx.showModal({
-          title: '错误',
-          content: "获取产品列表错误",
-          showCancel: false,
-        })
-      },
-      success: function (res) {
-        console.log(res);
-        if (res.statusCode == 200) {
-          if (res.data.code == 200) {
-            var _data = res.data.data;
-            var newData = {};
-            if(_data){
-              var _items = _data.items;
-              if(_items.length > 0){
-                if (add) { //这是下拉添加数据
-                  _items = _this.data.product.items.push(_items);
-                  _data["items"] = _items;
-                  newData = _data;
-                } else { //这是过滤数据
-                  newData = _data;
+    if (!product.is_last) {
+      var options = {
+        "type_id": data.type.activeId,
+        "keywords": data.keywords,
+        "page": parseInt(product.page),
+        "per_page": product.per_page,
+      };
+      var _this = this;
+      this.setData({
+        "isShowLoading": true,
+      });
+      wx.request({
+        // url: host + '/product/get-product-list',
+        url: host + '/test/get-product-list',
+        data: options,
+        fail: function (e) {
+          wx.showModal({
+            title: '错误',
+            content: "获取产品列表错误",
+            showCancel: false,
+          })
+        },
+        success: function (res) {
+          console.log(res);
+          if (res.statusCode == 200) {
+            if (res.data.code == 200) {
+              var _data = res.data.data;
+              var newData = {
+                'is_last': true,
+                "items": [],
+              };
+              if (_data) {
+                var _items = _data.items;
+                if (_items.length > 0) {
+                  if (add) { //这是下拉添加数据
+                    var oldItems = _this.data.product.items;
+                    for(var i in _items){
+                      oldItems.push(_items[i]);
+                    }
+                    _data["items"] = oldItems;
+                    newData = _data;
+                  } else { //这是过滤数据
+                    newData = _data;
+                  }
                 }
-              }else{
-                newData = {};
-              }
-            }else{
-              newData = {};
+                if(!_data.is_last){
+                  let page = parseInt(_this.productOptions.page);
+                  _this.setData({
+                    "productOptions.page": page + 1,
+                  });
+                }
+              } 
+              _this.setData({
+                "product": newData,
+              });
+            } else {
+              wx.showModal({
+                title: '错误',
+                content: res.data.msg,
+                showCancel: false
+              });
             }
-            _this.setData({
-              "product": newData,
-            });
           } else {
             wx.showModal({
               title: '错误',
-              content: res.data.msg,
-              showCancel: false
-            });
+              content: '获取请求失败！',
+              showCancel: false,
+            })
           }
-        } else {
-          wx.showModal({
-            title: '错误',
-            content: '获取请求失败！',
-            showCancel: false,
-          })
+        },
+        complete: function () {
+          _this.setData({
+            "isShowLoading": false,
+          });
         }
-      },
-      complete: function(){
-        _this.setData({
-          "isShowLoading": false,
-        });
-      }
-    })
+      })
+    }
   },
 
   showInput: function () {

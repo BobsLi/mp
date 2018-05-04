@@ -1,2 +1,87 @@
 <!--pages/supplier-info/index.wxml-->
-<text>pages/supplier-info/index.wxml</text>
+<import src="../../libs/wxParse/wxParse.wxml" />
+<view class="supplier-info-box">
+  <view class="head">
+    <view class="weui-flex head-flex">
+      <view class="img-box">
+        <image src='{{supplier.logo}}'></image>
+      </view>
+      <view class="supplier-name">{{supplier.name}}</view>
+      <view class="address">
+        <view class="weui-flex address-flex">
+          <image class="addr-icon" src="../../image/icon/location-1.png"></image>
+          <view class="weui-flex__item addr-text">{{supplier.address}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="article-item des-box">
+    <view class="info-title-box">
+      <view class="title-text">服务商介绍</view>
+    </view>
+    <view class="des-content">
+      <view class="wxParse">
+        <template is="wxParse" data="{{wxParseData:description.nodes}}" />
+      </view>
+    </view>
+  </view>
+  <view class="article-item product-list-box">
+    <view class="info-title-box">
+      <view class="title-text">相关产品</view>
+    </view>
+    <view class="product-list-content">
+      <block wx:for="{{product.items}}" wx:key="*this">
+        <view class="list-row">
+          <view class="weui-panel__bd">
+            <navigator url="/pages/pl-detail/detail?id={{item.id}}" class="weui-media-box weui-media-box_appmsg product-info-box" hover-class="weui-cell_active">
+              <view class="weui-media-box__hd weui-media-box__hd_in-appmsg img-box product-img-box">
+                <image class="weui-media-box__thumb" src="{{item.img}}" />
+              </view>
+              <view class="weui-media-box__bd weui-media-box__bd_in-appmsg product-rt">
+                <view class="product-name">{{item.name}}</view>
+                <view class="row-2">
+                  <view class="spec">{{item.spec}}</view>
+                  <view class="period">{{item.period}}</view>
+                </view>
+                <view class="price money-box">
+                  ￥
+                  <text class="money-num">{{item.price}}</text>
+                </view>
+              </view>
+            </navigator>
+          </view>
+          <view class="weui-panel__ft">
+            <view class="weui-cell weui-cell_access weui-cell_link product-foot">
+              <view class="weui-cell__bd foot-lt">
+                <view class="icon-box praise-box">
+                  <image class="base-icon" src='../../image/supplier-info/praise.png'></image>
+                  <text>{{item.praise}}</text>
+                </view>
+                <view class="icon-box trade-num-box">
+                  <image class="base-icon" src='../../image/supplier-info/trade-num.png'></image>
+                  <text>{{item.trade_num}}</text>
+                </view>
+              </view>
+              <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+
+  <block wx:if="{{isShowLoading && !product.is_last}}">
+    <view class='loading-box'>
+      <view class="weui-loadmore">
+        <view class="weui-loading"></view>
+        <view class="weui-loadmore__tips">正在加载</view>
+      </view>
+    </view>
+  </block>
+  <block wx:elif="{{!isShowLoading && product.is_last}}">
+    <view class="weui-loadmore weui-loadmore_line">
+      <view class="weui-loadmore__tips weui-loadmore__tips_in-line">没有数据啦</view>
+    </view>
+  </block>
+</view>
